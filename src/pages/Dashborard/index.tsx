@@ -1,9 +1,10 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
+import { Link } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
 
 import api from "../../services/api";
 
-import { Title, Form, Repositories } from "./styles";
+import { Title, Form, Repositories, Error } from "./styles";
 import logo from "../../assets/logo.svg";
 
 interface Repository {
@@ -16,17 +17,43 @@ interface Repository {
 }
 
 const Dashboard: React.FC = () => {
+    const [inputError, setInputError] = useState("");
     const [newRepo, setNewRepo] = useState("");
-    const [repositories, setRepositories] = useState<Repository[]>([]);
+    const [repositories, setRepositories] = useState<Repository[]>(() => {
+        const storageRepositories = localStorage.getItem(
+            "@GithubExplorer:repositories",
+        );
+        if (storageRepositories) {
+            return JSON.parse(storageRepositories);
+        } else {
+            return [];
+        }
+    });
+
+    useEffect(() => {
+        localStorage.setItem(
+            "@GithubExplorer:repositories",
+            JSON.stringify(repositories),
+        );
+    }, [repositories]);
 
     async function handleAddRepository(
         event: FormEvent<HTMLFormElement>,
     ): Promise<void> {
         event.preventDefault();
-        const response = await api.get(`repos/${newRepo}`);
-        const repository = response.data;
-        setRepositories([...repositories, repository]);
-        setNewRepo("");
+        if (!newRepo) {
+            setInputError("Digite usuário/repositório");
+            return;
+        }
+        try {
+            const response = await api.get(`repos/${newRepo}`);
+            const repository = response.data;
+            setRepositories([...repositories, repository]);
+            setNewRepo("");
+            setInputError("");
+        } catch (err) {
+            setInputError("Repositório não encontrado");
+        }
     }
 
     return (
@@ -34,7 +61,7 @@ const Dashboard: React.FC = () => {
             <img src={logo} alt="Git Explorer" />
             <Title>Explore repositórios no Github</Title>
 
-            <Form onSubmit={handleAddRepository}>
+            <Form hasError={!!inputError} onSubmit={handleAddRepository}>
                 <input
                     placeholder="Digite o usuário/repositório"
                     value={newRepo}
@@ -42,10 +69,14 @@ const Dashboard: React.FC = () => {
                 />
                 <button type="submit">Enviar</button>
             </Form>
+            {inputError && <Error>{inputError}</Error>}
 
             <Repositories>
                 {repositories.map((repository) => (
-                    <a key={repository.full_name} href="/repository">
+                    <Link
+                        key={repository.full_name}
+                        to={`/repository/${repository.full_name}`}
+                    >
                         <img
                             src={repository.owner.avatar_url}
                             alt={repository.owner.login}
@@ -55,7 +86,7 @@ const Dashboard: React.FC = () => {
                             <p>{repository.description}</p>
                         </div>
                         <FiChevronRight size={30} />
-                    </a>
+                    </Link>
                 ))}
             </Repositories>
         </>
