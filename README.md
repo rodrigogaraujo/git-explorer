@@ -3,7 +3,7 @@
 developing a simple application using the github api - Frontend with React
 
 # Install
-    git https://github.com/rodrigogaraujo/git-explorer.git
+    git clone https://github.com/rodrigogaraujo/git-explorer.git
     yarn
 
 # Libraries & Features

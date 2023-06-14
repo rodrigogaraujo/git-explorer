@@ -121,3 +121,9 @@ export const Issues = styled.section`
         }
     }
 `;
+
+export const ButtonLikeOrNot = styled.button`
+    outline: none;
+    background-color: none;
+    border: none;
+`;
