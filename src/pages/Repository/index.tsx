@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useRouteMatch, Link } from 'react-router-dom'
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { useRouteMatch } from 'react-router-dom'
+import { FiChevronRight } from 'react-icons/fi'
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 
-import { Header, RepositoryInfo, Issues, ButtonLikeOrNot } from './styles'
-import logo from '../../assets/logo.svg'
+import { RepositoryInfo, Issues, ButtonLikeOrNot } from './styles'
 import api from '../../services/api'
+import Header from '../../components/Header'
 
 interface RepositoryParams {
   repository: string
@@ -24,7 +24,7 @@ export interface Repository {
   }
 }
 
-interface Issue {
+export interface Issue {
   id: string
   title: string
   html_url: string
@@ -68,13 +68,7 @@ const Repository: React.FC = () => {
 
   return (
     <>
-      <Header>
-        <img src={logo} alt='Github explorer' />
-        <Link to='/'>
-          <FiChevronLeft size={16} />
-          Voltar
-        </Link>
-      </Header>
+      <Header withGoBack />
       {repository && (
         <RepositoryInfo>
           <header>

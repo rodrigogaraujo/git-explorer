@@ -3,9 +3,9 @@ import React, { useState, FormEvent, useEffect } from 'react'
 import api from '../../services/api'
 
 import { Title, Form, Repositories, Error } from './styles'
-import logo from '../../assets/logo.svg'
 import { RepositoryItem } from './components/RepositoryItem'
 import { Repository } from '../Repository'
+import Header from '../../components/Header'
 
 const Dashboard: React.FC = () => {
   const [inputError, setInputError] = useState('')
@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <img src={logo} alt='Git Explorer' />
+      <Header withLikes />
       <Title>Explore repositórios no Github</Title>
 
       <Form hasError={!!inputError} onSubmit={handleAddRepository}>
