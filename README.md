@@ -6,6 +6,9 @@ developing a simple application using the github api - Frontend with React
     git clone https://github.com/rodrigogaraujo/git-explorer.git
     yarn
 
+# To run
+    yarn start
+
 # Libraries & Features
     React
     React DOM
